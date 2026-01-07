@@ -27,7 +27,7 @@ tabsize=2,
 captionpos=t
 }
 
-\title{卒業論文のタイトル}
+\title{ゼロインテリジェンストレーダー市場における機械学習トレーダーの影響の解析}
 \author{慶應義塾大学理工学部物理情報工学科\\
 指導教員　渡辺宙志\\
 学籍番号　62219191\\
@@ -191,24 +191,101 @@ one-hot-vector
 
 \subsection{取引パフォーマンスと成功率}
 機械学習トレーダーの性能、混同行列、正解率など
+シミュレーションの結果、MLトレーダーはZITの行動予測について正解率99％で予測することができた。また、その結果を図4.1に混同行列として示す。
+縦軸は実際に起きた事象であり、横軸は予測した事象となっている。
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/confusion_matrix.pdf}
     \caption{混同行列}
     \label{fig:confusion}
 \end{figure}
-\end{lstlisting}
+
+
 \subsection{ML Traderの資産変動}
-図4.1(a)～(f)ML TraderとZITの市場　相補累積分布関数10～50
+図4.2にZITだけでシミュレーションした時の最終資産分布の相補累積を示す。
+図4.3~7に、MLトレーダーの市場混入率を10％~50％まで変化させた際の、最終資産分布の相補累積を示す。
 
 \section{ML TraderとRule Traderの比較}
-MLとRuleの資産分布図4.2
+図4.8~12に、Ruleトレーダーの市場混入率を10％~50％まで変化させた際の、最終資産分布の相補累積を示す。
 
 \subsection{エージェント混入率に対する資産分布パラメータの推移}
 MLまたはRuleの市場全体に対する混入率を10から50まで変化させた際、最終的な資産分布をガウス分布 $N(\mu, \sigma^2)$ と仮定してフィッティングを行い、そのパラメータ（平均 $\mu$、分散 $\sigma^2$）の変化を計測した。
-
+すべての混入率において、MLトレーダーの資産分布は平均840付近に集中し、ZITの分布を大きく上回る結果となった。
+これは、市場内の資金がZITからMLへと一方的に移転していることを示している。
 \subsection{トレード履歴}
 買い、売り平均など
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_10.pdf}
+    \caption{ML(10％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_20.pdf}
+    \caption{ML(20％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_30.pdf}
+    \caption{ML(30％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_40.pdf}
+    \caption{ML(40％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_50.pdf}
+    \caption{ML(50％)}
+    \label{fig:confusion}
+\end{figure}
+
+Rule TraderとZITの市場の相補累積分布関数10～50
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_R_10.pdf}
+    \caption{Rule(10％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_R_20.pdf}
+    \caption{Rule(20％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_R_30.pdf}
+    \caption{Rule(30％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_R_40.pdf}
+    \caption{Rule(40％)}
+    \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_R_50.pdf}
+    \caption{Rule(50％)}
+    \label{fig:confusion}
+\end{figure}
 
 \section{引用の仕方}
 
