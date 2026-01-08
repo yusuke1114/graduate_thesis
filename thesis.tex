@@ -63,7 +63,6 @@ captionpos=t
 
 \chapter{原理}
 
-卒業論文の章立ては「はじめに」「原理」「手法」「結果」「考察及び結論」とすることが多い。「原理」と「手法」はどちらも研究に用いた手法を記述するが、たとえば機械学習や分子動力学法の説明など、基礎的な手法の説明を「原理」に、卒業論文のために考案、採用した手法の説明を「手法」に分けて書く。
 \section{市場構造}
 
 \subsection{注文の種類}
@@ -135,10 +134,20 @@ $$
 
 \section{評価指標と統計的性質}
 
-\subsection{CCDF}
-
-
 \subsection{ファットテール}
+金融市場の価格変動や経済主体の資産分布において、正規分布から想定されるよりも、極端な値が高い頻度で出現する現象をファットテールと呼ぶ。
+統計学的に、正規分布の確率密度関数の裾指数関数的に急速に減衰する。
+これに対し、現実の複雑系や経済現象に見られる分布の多くは、裾の減衰が緩やかであり、平均値から標準偏差の数倍以上離れた事象が無視できない確率で発生する特性を持つ。
+
+
+\subsection{相補累積分布関数(CCDF)}
+CCDFは累積分布関数$F(x)$を用いて以下のように定義される。
+\begin{equation}
+    P(X \geq x) = 1 - F(x) = \int_{x}^{\infty} p(t) dt
+\end{equation}
+ここで、$P(X \geq x)$ は確率変数$X$がある値$x$以上となる確率を表し、$p(t)$は確率密度関数である。
+CCDFは確率密度を積分した形式をとるため、データの離散に伴うノイズが平滑化される。
+また、CCDFはべき乗則の検証において有効である。対象の分布がパレート分布などのべき分布に従う場合、CCDFを両対数グラフにプロットすると、その軌跡は右下がりの直線を描く。その傾きから、ファットテールの有無を検証することができる。
 
 
 \chapter{手法} \label{chap:method}
@@ -162,9 +171,6 @@ $$
 
 \section{エージェントモデル}
 
-\subsection{Zero-Intelligence Trader}
-
-
 \subsection{Machine Learning Trader}
 Machine Learning Trader (ML Trader)は、市場環境の状態を観測し、取引の成功確率を予測する機械学習モデルを搭載したエージェントである。
 まず、価格決定においては戦略的な価格決定は行わず、0～200の間でランダムに価格を選択する。価格を用いて、買い注文を出した場合と売り注文を出した場合のシナリオについて、現在の板情報と組み合わせた入力ベクトルを生成する。
@@ -179,11 +185,28 @@ Rule Traderは、現在位の市場の板情報に応じて、確実に有利な
 エージェントが市場環境に適応的な行動を選択するための予測器として、ニューラルネットワークを用いた機械学習モデルを構築する。現在の市場の状態と自信がとろうとする行動を入力し、その注文がどのような結果をもたらすかを確率的に予測する。
 順伝番型ニューラルネットワークを採用し、モデル層は入力層、複数の隠れ層および出力層から構成される。入力層は407次元のベクトルを受け取る。隠れ層の活性化関数にはReLUを採用し、出力層にはSoftmax関数を採用した。
 
-one-hot-vector
-学習データ
 
 \section{シミュレーション}
-期間、ステップ数、エージェント数、比率
+本実験におけるパラメータ設定を表\ref{tab:sim_params}に示す。1期間あたりのステップ数を4000として、それを100機関シミュレーションした。
+シミュレーションは、ZITとMLトレーダーを混ぜて行い、MLトレーダーの割合は10\%～50\%とした。また、ZITとRuleトレーダーを混ぜて行い、割合も同様とした。
+
+\begin{table}[htbp]
+
+    \centering
+    \caption{シミュレーションのパラメータ設定}
+    \label{tab:sim_params}
+    \begin{tabular}{lcc}
+        \hline
+        \textbf{パラメータ} & \textbf{記号} & \textbf{設定値} \\
+        \hline
+        エージェント総数 & $N$ & 2000 \\
+        期間数 & $M$ & 100 \\
+        1期間あたりのステップ数 & $T$ & 4000 ($2 \times N$) \\
+        初期資産 & $W_0$ & 500 \\
+        価格範囲 & $P$ & $[0, 200]$ \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \chapter{結果} \label{chap:method}
 
@@ -203,213 +226,367 @@ one-hot-vector
 
 
 \subsection{ML Traderの資産変動}
-図4.2にZITだけでシミュレーションした時の最終資産分布の相補累積を示す。
+図4.2にZITだけでシミュレーションした時の最終資産分布の相補累積を示す。ガウス分布通りの結果であることがわかった。
 図4.3~7に、MLトレーダーの市場混入率を10％~50％まで変化させた際の、最終資産分布の相補累積を示す。
+これより、10％、20％においてファットテールがが出現しており、それ以降ではガウス分布に従っていることが分かった。
 
 \section{ML TraderとRule Traderの比較}
 図4.8~12に、Ruleトレーダーの市場混入率を10％~50％まで変化させた際の、最終資産分布の相補累積を示す。
+Ruleトレーダでは、10~30％においてファットテールが出現しており、40％ではガウス分布通りになっていた。また、50％では再度ファットテールが出現していた。
 
 \subsection{エージェント混入率に対する資産分布パラメータの推移}
 MLまたはRuleの市場全体に対する混入率を10から50まで変化させた際、最終的な資産分布をガウス分布 $N(\mu, \sigma^2)$ と仮定してフィッティングを行い、そのパラメータ（平均 $\mu$、分散 $\sigma^2$）の変化を計測した。
 すべての混入率において、MLトレーダーの資産分布は平均840付近に集中し、ZITの分布を大きく上回る結果となった。
 これは、市場内の資金がZITからMLへと一方的に移転していることを示している。
+
 \subsection{トレード履歴}
-買い、売り平均など
+表4.1~5にZITとMLトレーダーの市場においての行動取引統計を示す。これから、MLトレーダーは高い値段で買い、安い値段で売っているが、売りの回数が買いの回数よりも多いため、利益を得ていることが分かった。
+また、表4.6~10にZITとRuleトレーダーの市場においての行動取引統計を示す。これから、Ruleトレーダーは高い値段で買い、安い値段で売っているが、MLトレーダーよりも売りと買いの回数の差が少ないために損をしていることが分かった。
+また、図4.13～17にZITとMLトレーダー市場での行動の割合の画像を示す。ここから、MLトレーダーはほぼ不成立がないことがわかった。
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率10\%のケース）}
+    \label{tab:trade_stats_10pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Agent Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Total Price} & \textbf{Mean Price} \\
+        \hline
+        ZIT & Buyer & Overwrite & 43,281 & 4,039,278 & 93.3 \\
+            &       & Executed  & 35,576 & 3,767,048 & 105.9 \\
+            \cline{2-6}
+            & Seller& Overwrite & 45,552 & 6,069,601 & 133.2 \\
+            &       & Executed  & 31,820 & 3,696,517 & 116.2 \\
+        \hline
+        ML  & Buyer & Overwrite & 4,285 & 604,310 & 141.0 \\
+            &       & Executed  & 7,009 & 858,078 & 122.4 \\
+            \cline{2-6}
+            & Seller& Overwrite & 8,746 & 695,425 & \textbf{79.5} \\
+            &       & Executed  & 10,765 & 928,609 & \textbf{86.3} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率20\%のケース）}
+    \label{tab:trade_stats_20pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Agent Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Total Price} & \textbf{Mean Price} \\
+        \hline
+        ZIT & Buyer & Overwrite & 43,394 & 3,900,929 & 89.9 \\
+            &       & Executed  & 35,991 & 3,578,930 & 99.4 \\
+            \cline{2-6}
+            & Seller& Overwrite & 45,539 & 6,155,463 & 135.2 \\
+            &       & Executed  & 29,314 & 3,450,420 & 117.7 \\
+        \hline
+        ML  & Buyer & Overwrite & 8,282 & 1,153,394 & 139.3 \\
+            &       & Executed  & 14,789 & 1,684,748 & 113.9 \\
+            \cline{2-6}
+            & Seller& Overwrite & 18,857 & 1,506,930 & \textbf{79.9} \\
+            &       & Executed  & 21,466 & 1,813,258 & \textbf{84.5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率30\%のケース）}
+    \label{tab:trade_stats_30pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Agent Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Total Price} & \textbf{Mean Price} \\
+        \hline
+        ZIT & Buyer & Overwrite & 42,370 & 3,656,729 & 86.3 \\
+            &       & Executed  & 35,748 & 3,339,293 & 93.4 \\
+            \cline{2-6}
+            & Seller& Overwrite & 45,442 & 6,210,620 & 136.7 \\
+            &       & Executed  & 26,583 & 3,128,095 & 117.7 \\
+        \hline
+        ML  & Buyer & Overwrite & 11,745 & 1,614,503 & 137.5 \\
+            &       & Executed  & 23,160 & 2,469,765 & 106.6 \\
+            \cline{2-6}
+            & Seller& Overwrite & 30,672 & 2,485,957 & \textbf{81.0} \\
+            &       & Executed  & 32,325 & 2,680,963 & \textbf{82.9} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率40\%のケース）}
+    \label{tab:trade_stats_40pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Agent Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Total Price} & \textbf{Mean Price} \\
+        \hline
+        ZIT & Buyer & Overwrite & 40,158 & 3,353,007 & 83.5 \\
+            &       & Executed  & 34,932 & 3,090,276 & 88.5 \\
+            \cline{2-6}
+            & Seller& Overwrite & 44,029 & 6,096,027 & 138.5 \\
+            &       & Executed  & 23,824 & 2,825,728 & 118.6 \\
+        \hline
+        ML  & Buyer & Overwrite & 14,360 & 1,978,542 & 137.8 \\
+            &       & Executed  & 32,220 & 3,237,738 & 100.5 \\
+            \cline{2-6}
+            & Seller& Overwrite & 44,293 & 3,600,807 & \textbf{81.3} \\
+            &       & Executed  & 43,328 & 3,502,286 & \textbf{80.8} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率50\%のケース）}
+    \label{tab:trade_stats_50pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Agent Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Total Price} & \textbf{Mean Price} \\
+        \hline
+        ZIT & Buyer & Overwrite & 37,276 & 3,015,605 & 80.9 \\
+            &       & Executed  & 33,318 & 2,777,456 & 83.4 \\
+            \cline{2-6}
+            & Seller& Overwrite & 42,151 & 5,875,114 & 139.4 \\
+            &       & Executed  & 20,723 & 2,438,384 & 117.7 \\
+        \hline
+        ML  & Buyer & Overwrite & 16,405 & 2,235,514 & 136.3 \\
+            &       & Executed  & 41,816 & 3,925,617 & 93.9 \\
+            \cline{2-6}
+            & Seller& Overwrite & 59,687 & 4,885,464 & \textbf{81.9} \\
+            &       & Executed  & 54,411 & 4,264,689 & \textbf{78.4} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率10\%のケース）}
+    \label{tab:rule_stats_10pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Sum} & \textbf{Mean} \\
+        \hline
+        ZIT & 買い & Overwrite & 44,646 & 4,193,447 & 93.9 \\
+            &      & Executed  & 34,892 & 3,766,356 & 107.9 \\
+            \cline{2-6}
+            & 売り & Overwrite & 44,452 & 5,954,731 & 134.0 \\
+            &      & Executed  & 32,128 & 3,786,768 & 117.9 \\
+        \hline
+        Rule& 買い & Overwrite & 5,789 & 765,179 & 132.2 \\
+            &      & Executed  & 7,525 & 950,777 & 126.3 \\
+            \cline{2-6}
+            & 売り & Overwrite & 7,161 & 541,611 & 75.6 \\
+            &      & Executed  & 10,289 & 930,365 & 90.4 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率20\%のケース）}
+    \label{tab:rule_stats_20pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Sum} & \textbf{Mean} \\
+        \hline
+        ZIT & 買い & Overwrite & 45,743 & 4,164,043 & 91.0 \\
+            &      & Executed  & 34,937 & 3,590,922 & 102.8 \\
+            \cline{2-6}
+            & 売り & Overwrite & 44,010 & 5,992,250 & 136.2 \\
+            &      & Executed  & 30,166 & 3,629,491 & 120.3 \\
+        \hline
+        Rule& 買い & Overwrite & 12,514 & 1,618,941 & 129.4 \\
+            &      & Executed  & 15,770 & 1,917,296 & 121.6 \\
+            \cline{2-6}
+            & 売り & Overwrite & 14,908 & 1,147,464 & 77.0 \\
+            &      & Executed  & 20,541 & 1,878,727 & 91.5 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率30\%のケース）}
+    \label{tab:rule_stats_30pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Sum} & \textbf{Mean} \\
+        \hline
+        ZIT & 買い & Overwrite & 44,567 & 3,948,665 & 88.6 \\
+            &      & Executed  & 34,120 & 3,354,155 & 98.3 \\
+            \cline{2-6}
+            & 売り & Overwrite & 43,384 & 6,003,130 & 138.4 \\
+            &      & Executed  & 27,992 & 3,439,141 & 122.9 \\
+        \hline
+        Rule& 買い & Overwrite & 19,822 & 2,522,978 & 127.3 \\
+            &      & Executed  & 24,653 & 2,911,869 & 118.1 \\
+            \cline{2-6}
+            & 売り & Overwrite & 22,849 & 1,766,884 & 77.3 \\
+            &      & Executed  & 30,781 & 2,826,883 & 91.8 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率40\%のケース）}
+    \label{tab:rule_stats_40pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Sum} & \textbf{Mean} \\
+        \hline
+        ZIT & 買い & Overwrite & 42,956 & 3,688,280 & 85.9 \\
+            &      & Executed  & 32,337 & 3,064,667 & 94.8 \\
+            \cline{2-6}
+            & 売り & Overwrite & 41,601 & 5,828,530 & 140.1 \\
+            &      & Executed  & 25,563 & 3,183,123 & 124.5 \\
+        \hline
+        Rule& 買い & Overwrite & 27,155 & 3,411,213 & 125.6 \\
+            &      & Executed  & 34,249 & 3,924,290 & 114.6 \\
+            \cline{2-6}
+            & 売り & Overwrite & 31,299 & 2,465,202 & 78.8 \\
+            &      & Executed  & 41,023 & 3,805,834 & 92.8 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率50\%のケース）}
+    \label{tab:rule_stats_50pct}
+    \begin{tabular}{lllrrr}
+        \hline
+        \textbf{Type} & \textbf{Role} & \textbf{Action} & \textbf{Count} & \textbf{Sum} & \textbf{Mean} \\
+        \hline
+        ZIT & 買い & Overwrite & 41,066 & 3,441,163 & 83.8 \\
+            &      & Executed  & 30,237 & 2,780,731 & 92.0 \\
+            \cline{2-6}
+            & 売り & Overwrite & 38,873 & 5,513,323 & 141.8 \\
+            &      & Executed  & 20,723 & 2,925,478 & 126.4 \\
+        \hline
+        Rule& 買い & Overwrite & 36,052 & 4,478,623 & 124.2 \\
+            &      & Executed  & 44,567 & 5,010,930 & 112.4 \\
+            \cline{2-6}
+            & 売り & Overwrite & 39,851 & 3,179,292 & 79.8 \\
+            &      & Executed  & 51,651 & 4,866,183 & 94.2 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/ccdf_zit.pdf}
+    \caption{ZIT}
+    \label{fig:ccdf_zit}
+\end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_10.pdf}
-    \caption{ML(10％)}
-    \label{fig:confusion}
+    \caption{ML(10\%)}
+    \label{fig:cML10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_20.pdf}
-    \caption{ML(20％)}
-    \label{fig:confusion}
+    \caption{ML(20\%)}
+    \label{fig:cML20}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_30.pdf}
-    \caption{ML(30％)}
-    \label{fig:confusion}
+    \caption{ML(30\%)}
+    \label{fig:cML30}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_40.pdf}
-    \caption{ML(40％)}
-    \label{fig:confusion}
+    \caption{ML(40\%)}
+    \label{fig:cML40}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_50.pdf}
-    \caption{ML(50％)}
-    \label{fig:confusion}
+    \caption{ML(50\%)}
+    \label{fig:cM50L}
 \end{figure}
 
 Rule TraderとZITの市場の相補累積分布関数10～50
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_10.pdf}
-    \caption{Rule(10％)}
-    \label{fig:confusion}
+    \caption{Rule(10\%)}
+    \label{fig:cRule10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_20.pdf}
-    \caption{Rule(20％)}
-    \label{fig:confusion}
+    \caption{Rule(20\%)}
+    \label{fig:cRule20}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_30.pdf}
-    \caption{Rule(30％)}
-    \label{fig:confusion}
+    \caption{Rule(30\%)}
+    \label{fig:cRule30}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_40.pdf}
-    \caption{Rule(40％)}
-    \label{fig:confusion}
+    \caption{Rule(40\%)}
+    \label{fig:cRule40}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_50.pdf}
-    \caption{Rule(50％)}
-    \label{fig:confusion}
+    \caption{Rule(50\%)}
+    \label{fig:cRule50}
 \end{figure}
-
-\section{引用の仕方}
-
-\subsection{論文の引用}
-
-原則として科学技術論文では、引用のない文章は「著者のオリジナル」であるとみなされる。LAMMPSなどのツールを使えばその関連論文を、手法の説明をするならその手法を提案した論文を引用しなければならない。
-
-引用するのは、原則として書籍か査読論文とし、ウェブサイトの引用はさけること。特に何かの説明の参照先としてWikipediaやSlideShareなどを挙げないこと。機械学習の論文であればプレプリント(arXiv)を読むことも多いと思われるが、引用したくなるような論文はどこかのカンファレンスに採択されていることが多いので、そちらを引用すること。たとえ自分がWikipediaで知識を得たとしても、Wikipediaで引用されている文献にあたり、書籍なり論文なりを参考にすること。
-
-参考文献は、原則としてBibTeXで管理する。これにより、「本文で参照されていない文献を参考文献に入れてはならない」「本文で参照される順番に並べないとならない」などのルールが自動的に満たされる。
-
-BibTeXでは、参考文献を「エントリ」と呼ばれる構造で管理する。エントリにはいくつか種別(エントリタイプ)があるが、良く使うのは書籍(book)、論文(article)、プロシーディング(inproceedings)などであろう。
-
-例えば論文は\verb|@article|を使う。以下のようなエントリを用意しよう。
-
-\begin{lstlisting}[language={[LaTeX]TeX}]
-@article{Watanabe2012,
-    author = {Watanabe, Hiroshi and Ito, Nobuyasu and Hu, Chin-Kun},
-    title = {Phase diagram and universality of the Lennard-Jones gas-liquid system},
-    journal = {The Journal of Chemical Physics},
-    volume = {136},
-    pages = {204102},
-    year = {2012}
-}
-\end{lstlisting}
-
-これをTeXファイル中で以下のように引用する。
-
-\begin{verbatim}
-分子動力学法によりLennard-Jones原子の相図が調べられた\cite{Watanabe2012}。
-\end{verbatim}
-
-これは以下のようにタイプセットされる。
-\begin{quotation}
-    分子動力学法によりLennard-Jones原子の相図が調べられた\cite{Watanabe2012}。
-\end{quotation}
-
-雑誌のウェブサイトからその論文のBiBTeXエントリがダウンロード可能であることが多く、手で作成する必要はほとんどない。
-
-\subsection{書籍の引用}
-
-書籍は以下のように\verb|@book|を使う。
-
-\begin{lstlisting}[language={[LaTeX]TeX}]
-@book{okumura2020,
-    author    = {奥村 晴彦 and 黒木 裕介},
-    title     = {LaTeX2ε美文書作成入門},
-    publisher = {技術評論社},
-    year      = {2020}
-}
-\end{lstlisting}
-
-これをTeXファイル中で以下のように引用する。
-
-\begin{verbatim}
-本論文の執筆にあたり、LaTeXの書き方については奥村・黒木の書籍を参考にした\cite{okumura2020}。
-\end{verbatim}
-
-これは以下のようにタイプセットされる。
-\begin{quotation}
-    本論文の執筆にあたり、LaTeXの書き方については奥村・黒木の書籍を参考にした\cite{okumura2020}。
-\end{quotation}
-
-\subsection{URLの引用}
-
-GitHubのサイトなど、やむを得ずURLを引用する場合には、bibitemのmiscを使って以下のようにする。
-
-\begin{lstlisting}[language=TeX]
-@misc{github,
-  howpublished = {\url{https://github.com/kaityo256/rbs}
-},
-\end{lstlisting}
-
-例えば
-
-\begin{verbatim}
-この論文の参照実装はGitHubにて利用可能である\cite{github}。
-\end{verbatim}
-として引用すると、
-
-\begin{quotation}
-    この論文の参照実装はGitHubにて利用可能である\cite{github}。
-\end{quotation}
-となる。
-
-\chapter{結果} \label{chap:results}
-
-\section{図の入れ方}
-
-図は、数が多くなければとりえあずfigといったディレクトリにまとめて入れておくと良いだろう。数が増えてきて管理が難しくなったら節ごとにわけるなど工夫すること。画像ファイルは原則としてPDFにすること。例えば\verb|temperature.pdf|を入れたいなら、
-
-\begin{lstlisting}[language={[LaTeX]TeX}]
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=10cm]{fig/temperature.pdf}
-    \caption{温度の時間発展。}
-    \label{fig:temperature}
-\end{figure}
-\end{lstlisting}
-
-とすると、以下のような図が得られる。
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=10cm]{fig/temperature.pdf}
-    \caption{温度の時間発展。}
-    \label{fig:temperature}
+    \includegraphics[width=10cm]{fig/action_ML10.pdf}
+    \caption{ML(10\%)}
+    \label{fig:aML10}
 \end{figure}
 
-この時、元データと、データからPDFを作るためのプロットファイルもしくはスクリプトファイルを一緒に入れておく。この時、画像ファイルとプロットファイルの名前を同じにしておくと良い。例えばgnuplotを使って\verb|temperature.pdf|という画像を作るなら、プロットファイルを\verb|temperature.plt|にしておく。すると、
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/action_ML20.pdf}
+    \caption{ML(20\%)}
+    \label{fig:aML20}
+\end{figure}
 
-\begin{lstlisting}[language=bash]
-gnuplot temperature.plt
-\end{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/action_ML30.pdf}
+    \caption{ML(30\%)}
+    \label{fig:aML30}
+\end{figure}
 
-を実行することで\verb|temperature.pdf|ができるのでわかりやすい。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/action_ML40.pdf}
+    \caption{ML(40\%)}
+    \label{fig:aML40}
+\end{figure}
 
-また、名前を揃えておくとmakefileとの相性が良くなる。例えば\verb|pressure.pdf|、\verb|temperature.pdf|、\verb|error.pdf|の三つのファイルが、同名のpltファイルから作成されるなら
-
-\lstinputlisting[language=make]{fig/makefile}
-
-といったmakefileを作っておけば、make一発で三つのファイルを作ることができるので便利だ。
-
-もちろんPythonのMatplotlibを使っても良いが、いずれにせよ「データとスクリプトからコマンド一発で図のファイルが作成できる状況にしておく。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/action_ML50.pdf}
+    \caption{ML(50\%)}
+    \label{fig:aML50}
+\end{figure}
 
 \chapter{考察および結論} \label{chap:summary}
 
