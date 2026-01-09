@@ -136,9 +136,17 @@ $$
 
 \subsection{ファットテール}
 金融市場の価格変動や経済主体の資産分布において、正規分布から想定されるよりも、極端な値が高い頻度で出現する現象をファットテールと呼ぶ。
+図\ref{fig:fat}にファットテールを示す。
 統計学的に、正規分布の確率密度関数の裾指数関数的に急速に減衰する。
 これに対し、現実の複雑系や経済現象に見られる分布の多くは、裾の減衰が緩やかであり、平均値から標準偏差の数倍以上離れた事象が無視できない確率で発生する特性を持つ。
 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/fat_tail.pdf}
+    \caption{正規分布とファット・テール分布の比較}
+    \label{fig:fat}
+\end{figure}
 
 \subsection{相補累積分布関数(CCDF)}
 CCDFは累積分布関数$F(x)$を用いて以下のように定義される。
@@ -173,7 +181,7 @@ CCDFは確率密度を積分した形式をとるため、データの離散に�
 
 \subsection{Machine Learning Trader}
 Machine Learning Trader (ML Trader)は、市場環境の状態を観測し、取引の成功確率を予測する機械学習モデルを搭載したエージェントである。
-まず、価格決定においては戦略的な価格決定は行わず、0～200の間でランダムに価格を選択する。価格を用いて、買い注文を出した場合と売り注文を出した場合のシナリオについて、現在の板情報と組み合わせた入力ベクトルを生成する。
+まず、価格決定においては戦略的な価格決定は行わず、0\~200の間でランダムに価格を選択する。価格を用いて、買い注文を出した場合と売り注文を出した場合のシナリオについて、現在の板情報と組み合わせた入力ベクトルを生成する。
 内部に保持する学習済みモデルを用いて、両方のシナリオにおける約定確立を推測する。買い注文と売り注文の約定成功確率を比較し、より高い確率で約定が見込める役割を選択して注文を実行する。
 
 \subsection{RuleTrader}
@@ -214,7 +222,7 @@ Rule Traderは、現在位の市場の板情報に応じて、確実に有利な
 
 \subsection{取引パフォーマンスと成功率}
 機械学習トレーダーの性能、混同行列、正解率など
-シミュレーションの結果、MLトレーダーはZITの行動予測について正解率99％で予測することができた。また、その結果を図4.1に混同行列として示す。
+シミュレーションの結果、MLトレーダーはZITの行動予測について正解率99\%で予測することができた。また、その結果を図\ref{fig:confusion}に混同行列として示す。
 縦軸は実際に起きた事象であり、横軸は予測した事象となっている。
 
 \begin{figure}[htbp]
@@ -226,27 +234,71 @@ Rule Traderは、現在位の市場の板情報に応じて、確実に有利な
 
 
 \subsection{ML Traderの資産変動}
-図4.2にZITだけでシミュレーションした時の最終資産分布の相補累積を示す。ガウス分布通りの結果であることがわかった。
-図4.3~7に、MLトレーダーの市場混入率を10％~50％まで変化させた際の、最終資産分布の相補累積を示す。
-これより、10％、20％においてファットテールがが出現しており、それ以降ではガウス分布に従っていることが分かった。
+図\ref{fig:ccdf_zit}にZITだけでシミュレーションした時の最終資産分布の相補累積を示す。ガウス分布通りの結果であった。
+図\ref{fig:cML10}から\ref{fig:cML50}に、MLトレーダーの市場混入率を10\%から50\%まで変化させた際の、最終資産分布の相補累積を示す。
+これより、10\%、20\%においてファットテールが出現しており、それ以降ではガウス分布に従っていることが分かった。
 
 \section{ML TraderとRule Traderの比較}
-図4.8~12に、Ruleトレーダーの市場混入率を10％~50％まで変化させた際の、最終資産分布の相補累積を示す。
-Ruleトレーダでは、10~30％においてファットテールが出現しており、40％ではガウス分布通りになっていた。また、50％では再度ファットテールが出現していた。
+図\ref{fig:cRule10}から\ref{fig:cRule50}に、Ruleトレーダーの市場混入率を10\%から50\%まで変化させた際の、最終資産分布の相補累積を示す。
+Ruleトレーダでは、10\%~30\%においてファットテールが出現しており、40\%ではガウス分布通りになっていた。また、50％では再度ファットテールが出現していた。
 
 \subsection{エージェント混入率に対する資産分布パラメータの推移}
-MLまたはRuleの市場全体に対する混入率を10から50まで変化させた際、最終的な資産分布をガウス分布 $N(\mu, \sigma^2)$ と仮定してフィッティングを行い、そのパラメータ（平均 $\mu$、分散 $\sigma^2$）の変化を計測した。
+MLまたはRuleの市場全体に対する混入率を10\%から50\%まで変化させた際、最終的な資産分布をガウス分布 $N(\mu, \sigma^2)$ と仮定してフィッティングを行い、そのパラメータ（平均 $\mu$、分散 $\sigma$）の変化を計測した。
+ZITのみで市場をシミュレーションした結果、$\mu$は500であり、$\sigma$は720となった。
+表\ref{tab:asset_stats_ml}にZITとMLトレーダーの資産分布パラメータ推移を示す。
 すべての混入率において、MLトレーダーの資産分布は平均840付近に集中し、ZITの分布を大きく上回る結果となった。
-これは、市場内の資金がZITからMLへと一方的に移転していることを示している。
-
-\subsection{トレード履歴}
-表4.1~5にZITとMLトレーダーの市場においての行動取引統計を示す。これから、MLトレーダーは高い値段で買い、安い値段で売っているが、売りの回数が買いの回数よりも多いため、利益を得ていることが分かった。
-また、表4.6~10にZITとRuleトレーダーの市場においての行動取引統計を示す。これから、Ruleトレーダーは高い値段で買い、安い値段で売っているが、MLトレーダーよりも売りと買いの回数の差が少ないために損をしていることが分かった。
-また、図4.13～17にZITとMLトレーダー市場での行動の割合の画像を示す。ここから、MLトレーダーはほぼ不成立がないことがわかった。
+市場の資金がZITからMLへと一方的に移転していることをがわかった。また、標準偏差がすべてZITのみでの市場よりも上回っていることがわかった。
+表\ref{tab:asset_stats_rule}にZITとRuleトレーダーの資産分布パラメータ推移を示す。
+市場内の資金がMLトレーダーとは違い、ZITへと一方的に移転していることがわかった。また、標準偏差はすべてZITがRuleを上回っていた。
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとMLトレーダーの行動別取引統計（混入率10\%のケース）}
+    \caption{ZITとMLトレーダーの資産分布パラメータ推移（平均 $\mu$, 標準偏差 $\sigma$）}
+    \label{tab:asset_stats_ml}
+    \begin{tabular}{crrrr}
+        \hline
+        \textbf{混入率} & \multicolumn{2}{c}{\textbf{ZIT}} & \multicolumn{2}{c}{\textbf{ML Trader}} \\
+        (\%) & $\mu$ (平均) & $\sigma$ (標準偏差) & $\mu$ (平均) & $\sigma$ (標準偏差) \\
+        \hline
+        %% --- Gnuplot出力貼り付けエリア ---
+        10\% & 460.8 & 733.6 & 852.7 & 1004.8 \\
+        20\% & 419.7 & 768.2 & 821.3 & 1129.5 \\
+        30\% & 349.1 & 780.7 & 852.0 & 1097.9 \\
+        40\% & 279.5 & 763.7 & 830.7 & 1023.8 \\
+        50\% & 160.9 & 813.4 & 839.1 & 943.6 \\
+        %% --------------------------------
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとRuleトレーダーの資産分布パラメータ推移（平均 $\mu$, 標準偏差 $\sigma$）}
+    \label{tab:asset_stats_rule}
+    \begin{tabular}{crrrr}
+        \hline
+        \textbf{混入率} & \multicolumn{2}{c}{\textbf{ZIT}} & \multicolumn{2}{c}{\textbf{Rule Trader}} \\
+        (\%) & $\mu$ (平均) & $\sigma$ (標準偏差) & $\mu$ (平均) & $\sigma$ (標準偏差) \\
+        \hline
+        %% --- Gnuplotの出力をここに貼り付け ---
+        110\% & 523.4 & 728.9 & 289.6 & 1098.5 \\
+        20\% & 531.1 & 771.9 & 375.6 & 1104.9 \\
+        30\% & 536.8 & 790.3 & 414.1 & 1094.2 \\
+        40\% & 600.6 & 829.5 & 349.1 & 1088.8 \\
+        50\% & 635.6 & 857.7 & 364.4 & 1162.0 \\
+        %% -------------------------------------
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{トレード履歴}
+表\ref{tab:trade_stats_10pct}から\ref{tab:trade_stats_50pct}にZITとMLトレーダーの市場においての行動取引統計を示す。MLトレーダーは高い値段で買い、安い値段で売っているが、売りの回数が買いの回数よりも多いため、利益を得ていることが分かった。
+また、表\ref{tab:rule_stats_10pct}から\ref{tab:rule_stats_50pct}にZITとRuleトレーダーの市場においての行動取引統計を示す。Ruleトレーダーは高い値段で買い、安い値段で売っているが、MLトレーダーよりも売りと買いの回数の差が少ないために損をしていることが分かった。
+また、図\ref{fig:aML10}から\ref{fig:aML50}にZITとMLトレーダー市場での行動の割合の画像を示す。MLトレーダーはほぼ不成立がないことがわかった。
+
+\begin{table}[htbp]
+    \centering
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率10\%）}
     \label{tab:trade_stats_10pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -261,15 +313,15 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
         ML  & Buyer & Overwrite & 4,285 & 604,310 & 141.0 \\
             &       & Executed  & 7,009 & 858,078 & 122.4 \\
             \cline{2-6}
-            & Seller& Overwrite & 8,746 & 695,425 & \textbf{79.5} \\
-            &       & Executed  & 10,765 & 928,609 & \textbf{86.3} \\
+            & Seller& Overwrite & 8,746 & 695,425 & 79.5 \\
+            &       & Executed  & 10,765 & 928,609 & 86.3 \\
         \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとMLトレーダーの行動別取引統計（混入率20\%のケース）}
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率20\%）}
     \label{tab:trade_stats_20pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -284,15 +336,15 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
         ML  & Buyer & Overwrite & 8,282 & 1,153,394 & 139.3 \\
             &       & Executed  & 14,789 & 1,684,748 & 113.9 \\
             \cline{2-6}
-            & Seller& Overwrite & 18,857 & 1,506,930 & \textbf{79.9} \\
-            &       & Executed  & 21,466 & 1,813,258 & \textbf{84.5} \\
+            & Seller& Overwrite & 18,857 & 1,506,930 & 79.9\\
+            &       & Executed  & 21,466 & 1,813,258 & 84.5\\
         \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとMLトレーダーの行動別取引統計（混入率30\%のケース）}
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率30\%）}
     \label{tab:trade_stats_30pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -307,15 +359,15 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
         ML  & Buyer & Overwrite & 11,745 & 1,614,503 & 137.5 \\
             &       & Executed  & 23,160 & 2,469,765 & 106.6 \\
             \cline{2-6}
-            & Seller& Overwrite & 30,672 & 2,485,957 & \textbf{81.0} \\
-            &       & Executed  & 32,325 & 2,680,963 & \textbf{82.9} \\
+            & Seller& Overwrite & 30,672 & 2,485,957 & 81.0 \\
+            &       & Executed  & 32,325 & 2,680,963 & 82.9\\
         \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとMLトレーダーの行動別取引統計（混入率40\%のケース）}
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率40\%）}
     \label{tab:trade_stats_40pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -330,15 +382,15 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
         ML  & Buyer & Overwrite & 14,360 & 1,978,542 & 137.8 \\
             &       & Executed  & 32,220 & 3,237,738 & 100.5 \\
             \cline{2-6}
-            & Seller& Overwrite & 44,293 & 3,600,807 & \textbf{81.3} \\
-            &       & Executed  & 43,328 & 3,502,286 & \textbf{80.8} \\
+            & Seller& Overwrite & 44,293 & 3,600,807 & 81.3 \\
+            &       & Executed  & 43,328 & 3,502,286 & 80.8 \\
         \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとMLトレーダーの行動別取引統計（混入率50\%のケース）}
+    \caption{ZITとMLトレーダーの行動別取引統計（混入率50\%）}
     \label{tab:trade_stats_50pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -353,15 +405,15 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
         ML  & Buyer & Overwrite & 16,405 & 2,235,514 & 136.3 \\
             &       & Executed  & 41,816 & 3,925,617 & 93.9 \\
             \cline{2-6}
-            & Seller& Overwrite & 59,687 & 4,885,464 & \textbf{81.9} \\
-            &       & Executed  & 54,411 & 4,264,689 & \textbf{78.4} \\
+            & Seller& Overwrite & 59,687 & 4,885,464 & 81.9 \\
+            &       & Executed  & 54,411 & 4,264,689 & 78.4 \\
         \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとRuleトレーダーの行動別取引統計（混入率10\%のケース）}
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率10\%）}
     \label{tab:rule_stats_10pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -384,7 +436,7 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとRuleトレーダーの行動別取引統計（混入率20\%のケース）}
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率20\%）}
     \label{tab:rule_stats_20pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -407,7 +459,7 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとRuleトレーダーの行動別取引統計（混入率30\%のケース）}
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率30\%）}
     \label{tab:rule_stats_30pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -430,7 +482,7 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとRuleトレーダーの行動別取引統計（混入率40\%のケース）}
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率40\%）}
     \label{tab:rule_stats_40pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -453,7 +505,7 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとRuleトレーダーの行動別取引統計（混入率50\%のケース）}
+    \caption{ZITとRuleトレーダーの行動別取引統計（混入率50\%）}
     \label{tab:rule_stats_50pct}
     \begin{tabular}{lllrrr}
         \hline
@@ -514,10 +566,9 @@ MLまたはRuleの市場全体に対する混入率を10から50まで変化さ�
     \centering
     \includegraphics[width=10cm]{fig/ccdf_50.pdf}
     \caption{ML(50\%)}
-    \label{fig:cM50L}
+    \label{fig:cML50}
 \end{figure}
 
-Rule TraderとZITの市場の相補累積分布関数10～50
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_10.pdf}
