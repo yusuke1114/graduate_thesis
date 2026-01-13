@@ -14,6 +14,142 @@
   year      = {2020}
 }
 
+
 @misc{github,
   howpublished = {\url{https://github.com/kaityo256/rbs}}
+}
+
+@article{Hambly2023,
+  author = {Hambly, Ben and Xu, Renyuan and Yang, Huining},
+  title = {Recent advances in reinforcement learning in finance},
+  journal = {Mathematical Finance},
+  volume = {33},
+  number = {3},
+  pages = {437--503},
+  year = {2023},
+  doi = {10.1111/mafi.12382}
+}
+
+@article{SEZER2020106181,
+title = {Financial time series forecasting with deep learning : A systematic literature review: 2005–2019},
+journal = {Applied Soft Computing},
+volume = {90},
+pages = {106181},
+year = {2020},
+issn = {1568-4946},
+doi = {https://doi.org/10.1016/j.asoc.2020.106181},
+url = {https://www.sciencedirect.com/science/article/pii/S1568494620301216},
+author = {Omer Berat Sezer and Mehmet Ugur Gudelek and Ahmet Murat Ozbayoglu},
+keywords = {Deep learning, Finance, Computational intelligence, Machine learning, Time series forecasting, CNN, LSTM, RNN},
+abstract = {Financial time series forecasting is undoubtedly the top choice of computational intelligence for finance researchers in both academia and the finance industry due to its broad implementation areas and substantial impact. Machine Learning (ML) researchers have created various models, and a vast number of studies have been published accordingly. As such, a significant number of surveys exist covering ML studies on financial time series forecasting. Lately, Deep Learning (DL) models have appeared within the field, with results that significantly outperform their traditional ML counterparts. Even though there is a growing interest in developing models for financial time series forecasting, there is a lack of review papers that solely focus on DL for finance. Hence, the motivation of this paper is to provide a comprehensive literature review of DL studies on financial time series forecasting implementation. We not only categorized the studies according to their intended forecasting implementation areas, such as index, forex, and commodity forecasting, but we also grouped them based on their DL model choices, such as Convolutional Neural Networks (CNNs), Deep Belief Networks (DBNs), and Long-Short Term Memory (LSTM). We also tried to envision the future of the field by highlighting its possible setbacks and opportunities for the benefit of interested researchers.}
+}
+
+
+@inproceedings{10.1145/3490354.3494372,
+author = {Ardon, Leo and Vadori, Nelson and Spooner, Thomas and Xu, Mengda and Vann, Jared and Ganesh, Sumitra},
+title = {Towards a fully rl-based market simulator},
+year = {2022},
+isbn = {9781450391481},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3490354.3494372},
+doi = {10.1145/3490354.3494372},
+abstract = {We present a new financial framework where two families of RL-based agents representing the Liquidity Providers and Liquidity Takers learn simultaneously to satisfy their objective. Thanks to a parametrized reward formulation and the use of Deep RL, each group learns a shared policy able to generalize and interpolate over a wide range of behaviors. This is a step towards a fully RL-based market simulator replicating complex market conditions particularly suited to study the dynamics of the financial market under various scenarios.},
+booktitle = {Proceedings of the Second ACM International Conference on AI in Finance},
+articleno = {7},
+numpages = {9},
+keywords = {reinforcement learning, multi-agent, market making},
+location = {Virtual Event},
+series = {ICAIF '21}
+}
+
+@article{Cartea2022,
+  author = {Cartea, {\'A}lvaro and Chang, Patrick and Penalva, Jos{\'e}},
+  title = {Algorithmic Collusion in Electronic Markets: The Impact of Tick Size},
+  journal = {SSRN Electronic Journal},
+  year = {2022},
+  doi = {10.2139/ssrn.4105954},
+  url = {https://ssrn.com/abstract=4105954}
+}
+
+@article{DICKS2024129363,
+title = {A simple learning agent interacting with an agent-based market model},
+journal = {Physica A: Statistical Mechanics and its Applications},
+volume = {633},
+pages = {129363},
+year = {2024},
+issn = {0378-4371},
+doi = {https://doi.org/10.1016/j.physa.2023.129363},
+url = {https://www.sciencedirect.com/science/article/pii/S0378437123009184},
+author = {Matthew Dicks and Andrew Paskaramoorthy and Tim Gebbie},
+keywords = {Strategic order-splitting, Reinforcement learning, Market simulation, Agent-based model},
+abstract = {We consider the learning dynamics of a single reinforcement learning optimal execution trading agent when it interacts with an event-driven agent-based financial market model. Trading takes place asynchronously through a matching engine in event time. The optimal execution agent is considered at different levels of initial order sizes and differently sized state spaces. The resulting impact on the agent-based model and market is considered using a calibration approach that explores changes in the empirical stylised facts and price impact curves. Convergence, volume trajectory and action trace plots are used to visualise the learning dynamics. The smaller state space agents had the number of states they visited converge much faster than the larger state space agents, and they were able to start learning to trade intuitively using the spread and volume states. We find that the moments of the model are robust to the impact of the learning agents, except for the Hurst exponent, which was lowered by the introduction of strategic order-splitting. The introduction of the learning agent preserves the shape of the price impact curves but can reduce the trade-sign auto-correlations and increase the micro-price volatility when the trading volumes increase.}
+}
+
+@inproceedings{10.1145/3383455.3422570,
+author = {Karpe, Micha\"{e}l and Fang, Jin and Ma, Zhongyao and Wang, Chen},
+title = {Multi-agent reinforcement learning in a realistic limit order book market simulation},
+year = {2021},
+isbn = {9781450375849},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3383455.3422570},
+doi = {10.1145/3383455.3422570}
+}
+
+@inproceedings{Yao2024,
+  author    = {Yao, Zhiyuan and Li, Zheng and Thomas, Matthew and Florescu, Ionut},
+  title     = {Reinforcement Learning in Agent-Based Market Simulation: Unveiling Realistic Stylized Facts and Behavior},
+  booktitle = {Proceedings of the 2024 International Joint Conference on Neural Networks},
+  series    = {IJCNN '24},
+  year      = {2024},
+  publisher = {IEEE},
+  note      = {Accepted},
+  url       = {https://arxiv.org/abs/2403.19781},
+  doi       = {10.48550/arXiv.2403.19781}
+}
+
+@article{GSmodel,
+ ISSN = {00223808, 1537534X},
+ URL = {http://www.jstor.org/stable/2138676},
+ abstract = {We report market experiments in which human traders are replaced by "zero-intelligence" programs that submit random bids and offers. Imposing a budget constraint (i.e., not permitting traders to sell below their costs or buy above their values) is sufficient to raise the allocative efficiency of these auctions close to 100 percent. Allocative efficiency of a double auction derives largely from its structure, independent of traders' motivation, intelligence, or learning. Adam Smith's invisible hand may be more powerful than some may have thought; it can generate aggregate rationality not only from individual rationality but also from individual irrationality.},
+ author = {Dhananjay K. Gode and Shyam Sunder},
+ journal = {Journal of Political Economy},
+ number = {1},
+ pages = {119--137},
+ publisher = {University of Chicago Press},
+ title = {Allocative Efficiency of Markets with Zero-Intelligence Traders: Market as a Partial Substitute for Individual Rationality},
+ urldate = {2026-01-13},
+ volume = {101},
+ year = {1993}
+}
+
+@article{MASLOV2000571,
+title = {Simple model of a limit order-driven market},
+journal = {Physica A: Statistical Mechanics and its Applications},
+volume = {278},
+number = {3},
+pages = {571-578},
+year = {2000},
+issn = {0378-4371},
+doi = {https://doi.org/10.1016/S0378-4371(00)00067-4},
+url = {https://www.sciencedirect.com/science/article/pii/S0378437100000674},
+author = {Sergei Maslov},
+abstract = {We introduce and study a simple model of a limit order-driven market. Traders in this model can either trade stock (or any other risky asset for that matter) at the market price or place a limit order, i.e., an instruction to buy (sell) a certain amount of the stock if its price falls below (raises above) a predefined level. The choice between these two options is purely random (there are no strategies involved), and the execution price of a limit order is determined simply by offsetting the most recent market price by a random amount. Numerical simulations of this model revealed that despite such minimalistic rules the price pattern generated by this model has such realistic features as “fat” tails of the probability distribution of price fluctuations, characterized by a crossover between two power law exponents, long range correlations of the volatility, and a non-trivial Hurst exponent of the price signal.}
+}
+
+@article{VJUSHIN2001234,
+title = {Scaling analysis of trends using DFA},
+journal = {Physica A: Statistical Mechanics and its Applications},
+volume = {302},
+number = {1},
+pages = {234-243},
+year = {2001},
+note = {Proc. Int. Workshop on Frontiers in the Physics of Complex Systems},
+issn = {0378-4371},
+doi = {https://doi.org/10.1016/S0378-4371(01)00467-8},
+url = {https://www.sciencedirect.com/science/article/pii/S0378437101004678},
+author = {Dmitry Vjushin and R.B. Govindan and Roberto A. Monetti and Shlomo Havlin and Armin Bunde},
+keywords = {Correlations, Trends, DFA, Scaling},
+abstract = {We study two aspects of the detrended fluctuation analysis (DFA) method, namely the scaling behavior of the leading terms of the best-fit polynomials and the detection of trends. We show analytically and numerically that the standard deviation of the leading terms of the best-fit polynomials used in DFA displays scaling behavior. Furthermore, we demonstrate that the distribution of these terms can be used to reveal the presence of trends in the data. We also argue that this distribution can be used as a sensitive tool for identifying weak trends.}
 }
