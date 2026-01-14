@@ -16,8 +16,8 @@ do for [p in pcts] {
     print ">> Processing: " . label
     
     # ファイル名
-    file_zit = "fig_ml/asset_raw_" . label . "_zit.dat"
-    file_ml  = "fig_ml/asset_raw_" . label . "_ml.dat"
+    file_zit = "fig/asset_raw_" . label . "_zit.dat"
+    file_ml  = "fig/asset_raw_" . label . "_ml.dat"
     
     # ★デバッグ出力: 統計量を計算して画面に表示
     stats file_zit using 1 name "Z"
