@@ -3,8 +3,8 @@
 # =========================================================
 
 # データファイルの指定
-file_ml  = "asset_ml10.dat"
-file_zit = "asset_ml10zit.dat"
+file_ml  = "asset_ml20.dat"
+file_zit = "asset_ml20zit.dat"
 
 # --- 統計量の計算 ---
 stats file_ml  using 1 name "M" nooutput
@@ -51,7 +51,7 @@ t_ml  = sprintf("ML Fit ({/Symbol m}=%.0f)", M_mean)
 # 1. PNG 出力
 # =========================================================
 set terminal pngcairo enhanced font "Helvetica,18" size 800, 600
-set output "asset_ml10zit.png"
+set output "asset_ml20zit.png"
 
 # プロット実行
 plot \
@@ -66,7 +66,7 @@ plot \
 # =========================================================
 # size はインチ指定 (800x600pxに近い比率として 8インチx6インチ を指定)
 set terminal pdfcairo enhanced font "Helvetica,18" size 8.0, 6.0
-set output "asset_ml10zit.pdf"
+set output "asset_ml20zit.pdf"
 
 # 直前のplotコマンドを再実行
 replot
