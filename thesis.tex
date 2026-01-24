@@ -59,17 +59,22 @@ captionpos=t
 \section{研究の目的}
 
 本研究の目的はまず、GodeとSunderのモデルに資産を導入し、学習を持たないZITのみの市場では、資産分布がガウス分布の挙動に留まることを定量的に確認し、これをベースラインとする。
-次に、ZITの行動を機械学習させた機械学習プレーヤーを導入した時の市場の影響を調べる。また、あらかじめ定められた固定的な取引戦略を持つトレーダーをZITの市場に導入した時の影響と比較し
+次に、ZITの行動を機械学習させた機械学習プレーヤーを導入した時の市場の影響を調べる。
+また、あらかじめ定められた固定的な取引戦略を持つトレーダーをZITの市場に導入した時の影響を比較し、機械学習エージェントが単なる定型的なルールの実行を超え、市場の微細な構造的歪みや需給バランスに適応した戦略を獲得しているかどうかを検証する。
 
 \section{本論文の構成}
 
-論文の構成を説明する。まず本研究の目的を一行で書いてから、各章に何が書いてあるかを説明する。以下は例である。
 
 \begin{quotation}
-    本研究では、では、分野Aにおける手法Xの精度改善を行う。以下に本論文の構成を示す。第\ref{chap:introduction}章では、分野Aにおける手法の概観を紹介し、手法Xが広く用いられていることを示した。第\ref{chap:method}章では、本研究で用いる手法X、及びその改善手法であるX'について説明する。第\ref{chap:results}章では、本研究で提案した手法X'と、もととなった手法Xとの精度の比較を行う。第\ref{chap:summary}章では本研究で得られた知見を総括し、結論と今後の展望について述べる。
+    本研究では、ゼロインテリジェンストレーダーで構成される市場に機械学習トレーダーを導入し、その影響について解析を行う。以下に本論文の構成を示す。
+    第\ref{chap:introduction}章では、金融市場における機械学習導入の影響と金融市場シミュレーションにおいての問題を示した。
+    第\ref{chap:genri}では、本シミュレーションの基盤となるZITモデル、使用したニューラルネットワークについて説明する。
+    第\ref{chap:method}章では、構築した市場環境の仕組みと、実装した機械学習トレーダ及びルールベーストレーダーの開発手法について説明する。
+    第\ref{chap:results}章では、シミュレーションによって得られた結果について示す。
+    第\ref{chap:summary}章では本研究で得られた知見を総括し、結論と今後の展望について述べる。
 \end{quotation}
 
-\chapter{原理}
+\chapter{原理}\label{chap:genri}
 
 \section{市場構造}
 
@@ -85,7 +90,7 @@ captionpos=t
 \section{ゼロ・インテリジェンス・トレーダー市場}
 
 \subsection{ゼロ・インテリジェンス・トレーダー}
-ゼロ・インテリジェンス・トレーダー（以下、ZIT）は、Gode and Sunder (1993) によって提唱されたエージェントモデルである[引用]。ZITは知能や戦略的思考を一切持たない極めて単純なアルゴリズムとして定義される。
+ゼロ・インテリジェンス・トレーダー（以下、ZIT）は、Gode and Sunder (1993) によって提唱されたエージェントモデルである\cite{GSmodel}。ZITは知能や戦略的思考を一切持たない極めて単純なアルゴリズムとして定義される。
 
 ZITは、過去の価格推移（トレンド）、板情報の需給バランス、他者の行動といった市場情報を一切参照しない。また、学習機能や記憶も保持しておらず、その行動は確率的に決定される。
 GodeとSunderは、ZITを制約なしモデル(ZI-U)と制約付きモデル(ZI-C)の2種類に分類している。ZI-Uは赤字となる取引も許容し、完全にランダムな価格で注文を出すもでるであり、ZI-Cは利益が負になる注文は出さないという予算制約のみを課したモデルである。本研究では、人間による市場取引の特性に近い挙動を示すことが確認されている ZI-C を採用し、以降単にZITと呼称する。
@@ -93,7 +98,7 @@ GodeとSunderは、ZITを制約なしモデル(ZI-U)と制約付きモデル(ZI-
 ZITの意思決定プロセスは、あらかじめ与えられた償還価値(Value)または原価(Cost)に基づく予算制約の範囲内での一様乱数によって決定される。各エージェント $i$ の注文価格決定ルールは2通りある。
 買い手の場合、エージェントには、商品の評価額である私的価値 $V_i$ が割り当てられる。買い手は、自身の利益（$V_i - P_{bid}$）が確保できる範囲、すなわち $0$ から $V_i$ の間で、一様分布に従ってランダムに注文価格 $P_{bid}$ を決定する。
 売り手の場合、エージェントには、商品の調達コストである原価 $C_i$ が割り当てられる。売り手は、自身の利益（$P_{ask} - C_i$）が確保できる範囲、すなわち $C_i$ から市場の上限価格 $P_{max}$ の間で、一様分布に従ってランダムに注文価格 $P_{ask}$ を決定する。
-このアルゴリズムにより、ZITは安く買って高く売る」という戦略的な意図は持たないものの、「高く買って安く売るという明白な損失行動は回避される。
+このアルゴリズムにより、ZITは安く買って高く売るという戦略的な意図は持たないものの、高く買って安く売るという明白な損失行動は回避される。
 
 \subsection{GSモデル}
 GSモデルとは、ZITエージェントを、連続ダブルオークションと呼ばれる市場メカニズムの中で取引させる市場シミュレーションモデルの総称である。
@@ -205,7 +210,7 @@ CCDFは確率密度を積分した形式をとるため、データの離散に�
 
 \subsection{Machine Learning Trader}
 Machine Learning Trader (ML Trader)は、市場環境の状態を観測し、取引の成功確率を予測する機械学習モデルを搭載したエージェントである。
-まず、価格決定においては戦略的な価格決定は行わず、0\~200の間でランダムに価格を選択する。価格を用いて、買い注文を出した場合と売り注文を出した場合のシナリオについて、現在の板情報と組み合わせた入力ベクトルを生成する。
+まず、価格決定においては戦略的な価格決定は行わず、0～200の間でランダムに価格を選択する。価格を用いて、買い注文を出した場合と売り注文を出した場合のシナリオについて、現在の板情報と組み合わせた入力ベクトルを生成する。
 内部に保持する学習済みモデルを用いて、両方のシナリオにおける約定確立を推測する。買い注文と売り注文の約定成功確率を比較し、より高い確率で約定が見込める役割を選択して注文を実行する。
 
 \subsection{Rule-Based Trader}
@@ -240,7 +245,7 @@ RB Traderは、現在位の市場の板情報に応じて、確実に有利な�
     \end{tabular}
 \end{table}
 
-\chapter{結果} \label{chap:method}
+\chapter{結果} \label{chap:results}
 
 \section{ML Traderの特性}
 
@@ -264,14 +269,14 @@ RB Traderは、現在位の市場の板情報に応じて、確実に有利な�
 
 \section{ML TraderとRB Traderの比較}
 図\ref{fig:cRule10}から\ref{fig:cRule50}に、RBトレーダーの市場混入率を10\%から50\%まで変化させた際の、最終資産分布の相補累積を示す。
-Ruleトレーダでは、10\%~30\%においてファットテールが出現しており、40\%ではガウス分布通りになっていた。また、50％では再度ファットテールが出現していた。
+RBトレーダーでは、10\%～30\%においてファットテールが出現しており、40\%ではガウス分布通りになっていた。また、50％では再度ファットテールが出現していた。
 
 \subsection{エージェント混入率に対する資産分布パラメータの推移}
 MLまたはRBトレーダーの市場全体に対する混入率を10\%から50\%まで変化させた際、最終的な資産分布をガウス分布 $N(\mu, \sigma^2)$ と仮定してフィッティングを行い、そのパラメータ（平均 $\mu$、分散 $\sigma$）の変化を計測した。
 ZITのみで市場をシミュレーションした結果、$\mu$は500であり、$\sigma$は720となった。
 表\ref{tab:asset_stats_ml}にZITとMLトレーダーの資産分布パラメータ推移を示す。
 すべての混入率において、MLトレーダーの資産分布は平均840付近に集中し、ZITの分布を大きく上回る結果となった。
-市場の資金がZITからMLへと一方的に移転していることをがわかった。また、標準偏差がすべてZITのみでの市場よりも上回っていることがわかった。
+市場の資金がZITからMLトレーダーへと一方的に移転していることをがわかった。また、標準偏差がすべてZITのみでの市場よりも上回っていることがわかった。
 表\ref{tab:asset_stats_rule}にZITとRBトレーダーの資産分布パラメータ推移を示す。
 市場内の資金がMLトレーダーとは違い、ZITへと一方的に移転していることがわかった。また、標準偏差はすべてZITがRBトレーダーを上回っていた。
 
@@ -297,7 +302,7 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
 
 \begin{table}[htbp]
     \centering
-    \caption{ZITとRuleトレーダーの資産分布パラメータ推移（平均 $\mu$, 標準偏差 $\sigma$）}
+    \caption{ZITとRBトレーダーの資産分布パラメータ推移（平均 $\mu$, 標準偏差 $\sigma$）}
     \label{tab:asset_stats_rule}
     \begin{tabular}{crrrr}
         \hline
@@ -449,7 +454,7 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
             & 売り & Overwrite & 44,452 & 5,954,731 & 134.0 \\
             &      & Executed  & 32,128 & 3,786,768 & 117.9 \\
         \hline
-        Rule& 買い & Overwrite & 5,789 & 765,179 & 132.2 \\
+        RB  & 買い & Overwrite & 5,789 & 765,179 & 132.2 \\
             &      & Executed  & 7,525 & 950,777 & 126.3 \\
             \cline{2-6}
             & 売り & Overwrite & 7,161 & 541,611 & 75.6 \\
@@ -472,7 +477,7 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
             & 売り & Overwrite & 44,010 & 5,992,250 & 136.2 \\
             &      & Executed  & 30,166 & 3,629,491 & 120.3 \\
         \hline
-        Rule& 買い & Overwrite & 12,514 & 1,618,941 & 129.4 \\
+        RB  & 買い & Overwrite & 12,514 & 1,618,941 & 129.4 \\
             &      & Executed  & 15,770 & 1,917,296 & 121.6 \\
             \cline{2-6}
             & 売り & Overwrite & 14,908 & 1,147,464 & 77.0 \\
@@ -495,7 +500,7 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
             & 売り & Overwrite & 43,384 & 6,003,130 & 138.4 \\
             &      & Executed  & 27,992 & 3,439,141 & 122.9 \\
         \hline
-        Rule& 買い & Overwrite & 19,822 & 2,522,978 & 127.3 \\
+        RB  & 買い & Overwrite & 19,822 & 2,522,978 & 127.3 \\
             &      & Executed  & 24,653 & 2,911,869 & 118.1 \\
             \cline{2-6}
             & 売り & Overwrite & 22,849 & 1,766,884 & 77.3 \\
@@ -518,7 +523,7 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
             & 売り & Overwrite & 41,601 & 5,828,530 & 140.1 \\
             &      & Executed  & 25,563 & 3,183,123 & 124.5 \\
         \hline
-        Rule& 買い & Overwrite & 27,155 & 3,411,213 & 125.6 \\
+        RB  & 買い & Overwrite & 27,155 & 3,411,213 & 125.6 \\
             &      & Executed  & 34,249 & 3,924,290 & 114.6 \\
             \cline{2-6}
             & 売り & Overwrite & 31,299 & 2,465,202 & 78.8 \\
@@ -541,7 +546,7 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
             & 売り & Overwrite & 38,873 & 5,513,323 & 141.8 \\
             &      & Executed  & 20,723 & 2,925,478 & 126.4 \\
         \hline
-        Rule& 買い & Overwrite & 36,052 & 4,478,623 & 124.2 \\
+        RB  & 買い & Overwrite & 36,052 & 4,478,623 & 124.2 \\
             &      & Executed  & 44,567 & 5,010,930 & 112.4 \\
             \cline{2-6}
             & 売り & Overwrite & 39,851 & 3,179,292 & 79.8 \\
@@ -561,105 +566,105 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_10.pdf}
-    \caption{ML(10\%)}
+    \caption{MLトレーダー(10\%)}
     \label{fig:cML10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_20.pdf}
-    \caption{ML(20\%)}
+    \caption{MLトレーダー(20\%)}
     \label{fig:cML20}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_30.pdf}
-    \caption{ML(30\%)}
+    \caption{MLトレーダー(30\%)}
     \label{fig:cML30}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_40.pdf}
-    \caption{ML(40\%)}
+    \caption{MLトレーダー(40\%)}
     \label{fig:cML40}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_50.pdf}
-    \caption{ML(50\%)}
+    \caption{MLトレーダー(50\%)}
     \label{fig:cML50}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_10.pdf}
-    \caption{Rule(10\%)}
+    \caption{RBトレーダー(10\%)}
     \label{fig:cRule10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_20.pdf}
-    \caption{Rule(20\%)}
+    \caption{RBトレーダー(20\%)}
     \label{fig:cRule20}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_30.pdf}
-    \caption{Rule(30\%)}
+    \caption{RBトレーダー(30\%)}
     \label{fig:cRule30}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_40.pdf}
-    \caption{Rule(40\%)}
+    \caption{RBトレーダー(40\%)}
     \label{fig:cRule40}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/ccdf_R_50.pdf}
-    \caption{Rule(50\%)}
+    \caption{RBトレーダー(50\%)}
     \label{fig:cRule50}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/action_ML10.pdf}
-    \caption{ML(10\%)}
+    \caption{MLトレーダー(10\%)}
     \label{fig:aML10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/action_ML20.pdf}
-    \caption{ML(20\%)}
+    \caption{MLトレーダー(20\%)}
     \label{fig:aML20}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/action_ML30.pdf}
-    \caption{ML(30\%)}
+    \caption{MLトレーダー(30\%)}
     \label{fig:aML30}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/action_ML40.pdf}
-    \caption{ML(40\%)}
+    \caption{MLトレーダー(40\%)}
     \label{fig:aML40}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/action_ML50.pdf}
-    \caption{ML(50\%)}
+    \caption{MLトレーダー(50\%)}
     \label{fig:aML50}
 \end{figure}
 
@@ -674,10 +679,10 @@ ZITのみで市場をシミュレーションした結果、$\mu$は500であり
 ここで、シミュレーションの基盤となるZITエージェントのパラメータ生成プロセスにおいて、取引の成立を促進するために「評価額（Value）が原価（Cost）を下回る場合、Valueを再設定する」という補正処理が行われている。
 この仕様により、市場全体として買い手の予算（Value）が中央値である100よりも高めに設定される傾向が生じた。その結果、板上には高値の買い注文が滞留しやすく、安値の売り注文は約定し枯渇しやすいという買い需要過多・売り供給不足の構造的バイアスが常態化していた。
 この市場環境下において、行動確率の最大化を目指すMLトレーダーと確実に行動するRBトレーダーはそれぞれ異なる適応を見せた。RBトレーダーは市場に買い注文が多くなるため、確率的に売り注文が約定しやすくなる。その結果、RBトレーダーの行動は自然と売りに偏った。
-しかし、板が空の時においては買い手になるのか売り手になるのかはランダムであり、高く買って安く売るコストを相殺するまでには至らず、純資産を減少させたと考えられる。一方、MLトレーダーは学習過程において買うことを避け、売りを多くするという極端な非対称戦略を能動的に選択した。MLトレーダーは板が空の時でも売りに特化することは適用される。
+しかし、板が空の時においては買い手になるのか売り手になるのかはランダムであり、高く買って安く売るコストを相殺するまでには至らず、純資産を減少させたと考えられる。一方、MLトレーダーは学習過程において買うことを避け、売りを多くするという非対称戦略を能動的に選択した。MLトレーダーは板が空の時でも売りに特化することは適用される。
 この板が空の時の行動の差によってMLトレーダーは利益を得ることができたと考えられる。
 
-\section{結論}
+\section{結論と今後の展望}
 本研究では、エージェントベースモデルを用いて、機械学習トレーダーがZIT市場に与える影響を定量的に評価した。市場のボラティリティについては大きな変化は見られなかった一方で、資産分布においてはファットテールの出現が確認された。
 機械学習エージェントは市場の構造的な歪み、具体的にはZITのパラメータ生成ルールに起因する買い需要の滞留を検知し、買いを抑えつつ売りを増やすという戦略を獲得したことが明らかとなった。
 この戦略の結果、市場参加者は売り特化により現金を回収する機械エージェントとそれを受け止めるZITという取引行動や資産推移の統計的性質が異なる二つのクラスへと分極化し、この平均や分散の異なる分布の混合が市場全体としてみた際にファットテールとして観測されたと推測できる。
