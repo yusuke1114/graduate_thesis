@@ -171,11 +171,10 @@ $$
 統計学的に、正規分布の確率密度関数の裾は、指数関数的に急速に減衰する。
 これに対し、現実の複雑系や経済現象に見られる分布の多くは、裾の減衰が緩やかであり、平均値から標準偏差の数倍以上離れた事象が無視できない確率で発生する特性を持つ。
 
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{fig/fat_tail.pdf}
-    \caption{正規分布とファット・テール分布の比較}
+    \caption{正規分布とファット・テール分布の比較\cite{fattail}}
     \label{fig:fat}
 \end{figure}
 
@@ -186,8 +185,14 @@ CCDFは累積分布関数$F(x)$を用いて以下のように定義される。
 \end{equation}
 ここで、$P(X \geq x)$ は確率変数$X$がある値$x$以上となる確率を表し、$p(t)$は確率密度関数である。
 相補累積分布関数(Complementary Cumulative Distribution Dunction,CCDF)は確率密度を積分した形式をとるため、データの離散に伴うノイズが平滑化される。
-また、CCDFはべき乗則の検証において有効である。対象の分布がパレート分布などのべき分布に従う場合、CCDFを両対数グラフにプロットすると、その軌跡は右下がりの直線を描く。その傾きから、ファットテールの有無を検証することができる。
+また、CCDFはべき乗則の検証において有効である。対象の分布がパレート分布などのべき分布に従う場合、CCDFを両対数グラフにプロットすると、その軌跡は図図\ref{fig:fat}のように右下がりの直線を描く。その傾きから、ファットテールの有無を検証することができる。
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{fig/fattail2.pdf}
+    \caption{ファットテールと正規分布のCCDF}
+    \label{fig:fat2}
+\end{figure}
 
 \chapter{手法} \label{chap:method}
 
