@@ -46,9 +46,9 @@ EOD
 shift = 0.5
 
 plot \
-    $Data using ($1-shift):2:3 with yerrorbars lw 1.5 lc rgb "blue" pt 7 ps 1.2 title "ZIT Mean +/- {/Symbol s}", \
+    $Data using ($1-shift):2:3 with yerrorbars lw 1.5 lc rgb "blue" pt 7 ps 1.2 notitle, \
     $Data using ($1-shift):2 with lines lw 2 lc rgb "blue" notitle, \
-    $Data using ($1+shift):4:5 with yerrorbars lw 1.5 lc rgb "red" pt 7 ps 1.2 title "Rule Mean +/- {/Symbol s}", \
-    $Data using ($1+shift):4 with lines lw 2 lc rgb "red" notitle
+    $Data using ($1+shift):4:5 with yerrorbars lw 1.5 lc rgb "green" pt 7 ps 1.2 notitle, \
+    $Data using ($1+shift):4 with lines lw 2 lc rgb "green" notitle
 
 unset output

@@ -8,15 +8,14 @@ set output "transition_sqrt_sigma.png"
 # タイトルなし
 unset title
 
-# --- 変更点: ここで個別にフォントサイズを指定します ---
-# ",24" とすることで、フォント種類は継承し、サイズだけ24にします
+# --- フォントサイズ設定 ---
 set xlabel "ML Trader Ratio (%)" font ",24"
 set ylabel "Mean Asset Value ({/Symbol m})" font ",24" offset -1,0
 
 set grid xtics ytics
 
-# 凡例の設定 (枠なし)
-set key top right nobox font",20"
+# ★変更点: 凡例（右上の表示）を完全に消去
+unset key
 
 # X軸の設定
 set xrange [5:55]
@@ -40,10 +39,11 @@ EOD
 # --- プロット ---
 shift = 0.5
 
+# 凡例を表示しないため、title指定は無視されますが、念のため記述は残しています
 plot \
-    $Data using ($1-shift):2:3 with yerrorbars lw 1.5 lc rgb "blue" pt 7 ps 1.2 title "ZIT Mean +/- {/Symbol s}", \
+    $Data using ($1-shift):2:3 with yerrorbars lw 1.5 lc rgb "blue" pt 7 ps 1.2 title "ZIT +/- {/Symbol s}", \
     $Data using ($1-shift):2 with lines lw 2 lc rgb "blue" notitle, \
-    $Data using ($1+shift):4:5 with yerrorbars lw 1.5 lc rgb "red" pt 7 ps 1.2 title "ML Mean +/- {/Symbol s}", \
+    $Data using ($1+shift):4:5 with yerrorbars lw 1.5 lc rgb "red" pt 7 ps 1.2 notitle, \
     $Data using ($1+shift):4 with lines lw 2 lc rgb "red" notitle
 
 unset output
